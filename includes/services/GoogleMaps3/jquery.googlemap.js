@@ -12,7 +12,6 @@
 		this.map = null;
 		this.markercluster = null;
 		this.options = options;
-
 		/**
 		 * All markers that are currently on the map.
 		 * @type {Array}
@@ -52,24 +51,66 @@
 
 
 		var getBounds = function() {
-			if (( options.centre === false || options.zoom === false ) && options.locations.length > 1) {
-				bounds = new google.maps.LatLngBounds();
-
-				for (var i = _this.markers.length - 1; i >= 0; i--) {
+			bounds = new google.maps.LatLngBounds();
+			if ( _this.markers.length > 0) {
+				for ( var i = _this.markers.length - 1; i >= 0; i-- ) {
 					bounds.extend(_this.markers[i].getPosition());
 				}
-				return bounds;
 			}
-			return null;
+			if ( _this.lines.length > 0 ) {
+				for ( var i = _this.lines.length - 1; i >= 0; i-- ) {
+					_this.lines[i].getPath().forEach( function( point, i ){
+						bounds.extend( point );
+					} );
+				}
+			}
+			if ( _this.polygons.length > 0 ) {
+				for ( var i = _this.polygons.length - 1; i >= 0; i-- ) {
+					_this.polygons[i].getPaths().forEach( function( path, i ){
+						path.forEach( function( point, i ){
+							bounds.extend( point );
+							} );
+					} );
+				}
+			}
+			if ( _this.circles.length > 0 ) {
+				for ( var i = _this.circles.length - 1; i >= 0; i-- ) {
+					bounds.extend( _this.circles[i].getCenter() );
+				}
+			}
+			if ( _this.rectangles.length > 0 ) {
+				for ( var i = _this.rectangles.length - 1; i >= 0; i-- ) {
+					bounds.extend( _this.rectangles[i].getBounds().getNorthEast() );
+					bounds.extend( _this.rectangles[i].getBounds().getSouthWest() );
+				}
+			}
+			return bounds;
 		};
 
-		var setZoom = function(bounds) {
-				if (options.zoom === false) {
-				_this.map.fitBounds(bounds);
+
+		var setZoom = function( bounds ) {
+			if ( options.zoom === false ) {
+				_this.map.fitBounds( bounds );
 			}
 			else {
-				_this.map.setZoom(options.zoom);
+				_this.map.setZoom( options.zoom );
 			}
+		};
+
+
+		var setCenter = function( bounds ) {
+			if (options.centre === false) {
+				if ( options.locations.length > 0 || options.rectangles.length > 0 || options.circles.length > 0 || options.lines.length > 0 || options.polygons.length > 0 ) {
+					centre = bounds.getCenter();
+				}
+				else {
+					centre = new google.maps.LatLng(0, 0);
+				}
+			}
+			else {
+				centre = new google.maps.LatLng( options.centre.lat, options.centre.lon );
+			}
+			_this.map.setCenter(centre);
 		};
 
 
@@ -455,6 +496,43 @@
 				this.addMarker(options.locations[i]);
 			}
 
+			/**
+			 * used in display_line functionality
+			 * draws paths between markers
+			 */
+			if (options.lines) {
+				for (var i = 0; i < options.lines.length; i++) {
+					this.addLine(options.lines[i]);
+				}
+			}
+
+			/**
+			 * used in display_line to draw polygons
+			 */
+			if (options.polygons) {
+				for (var i = 0; i < options.polygons.length; i++) {
+					this.addPolygon(options.polygons[i]);
+				}
+			}
+
+			/**
+			 * used in display_line to draw circles
+			 */
+			if (options.circles) {
+				for (var i = 0; i < options.circles.length; i++) {
+					this.addCircle(options.circles[i]);
+				}
+			}
+
+			/**
+			 * used in display_line to draw rectangles
+			 */
+			if (options.rectangles) {
+				for (var i = 0; i < options.rectangles.length; i++) {
+					this.addRectangle(options.rectangles[i]);
+				}
+			}
+
 			for (i = options.fusiontables.length - 1; i >= 0; i--) {
 				var ftLayer = new google.maps.FusionTablesLayer(options.fusiontables[i], { map:map });
 			}
@@ -465,32 +543,15 @@
 			};
 
 			for (i = options.layers.length - 1; i >= 0; i--) {
-				var layer = eval(layerMapping[options.layers[i]]);
+				var layer = eval( layerMapping[options.layers[i]] );
 				layer.setMap(map);
 			}
 
 			var bounds = getBounds();
 
-			setZoom(bounds);
-
-			var centre;
-
-			if (options.centre === false) {
-				if (options.locations.length > 1) {
-					centre = bounds.getCenter();
-				}
-				else if (options.locations.length == 1) {
-					centre = new google.maps.LatLng(options.locations[0].lat, options.locations[0].lon);
-				}
-				else {
-					centre = new google.maps.LatLng(0, 0);
-				}
-			}
-			else {
-				centre = new google.maps.LatLng(options.centre.lat, options.centre.lon);
-			}
-
-			map.setCenter(centre);
+			setZoom( bounds );
+	
+			setCenter( bounds );
 
 			if (showEarth) {
 				$.getScript(
@@ -573,43 +634,6 @@
 				mw.loader.using('ext.maps.resizable', function () {
 					_this.resizable();
 				});
-			}
-
-			/**
-			 * used in display_line functionality
-			 * draws paths between markers
-			 */
-			if (options.lines) {
-				for (var i = 0; i < options.lines.length; i++) {
-					this.addLine(options.lines[i]);
-				}
-			}
-
-			/**
-			 * used in display_line to draw polygons
-			 */
-			if (options.polygons) {
-				for (var i = 0; i < options.polygons.length; i++) {
-					this.addPolygon(options.polygons[i]);
-				}
-			}
-
-			/**
-			 * used in display_line to draw circles
-			 */
-			if (options.circles) {
-				for (var i = 0; i < options.circles.length; i++) {
-					this.addCircle(options.circles[i]);
-				}
-			}
-
-			/**
-			 * used in display_line to draw rectangles
-			 */
-			if (options.rectangles) {
-				for (var i = 0; i < options.rectangles.length; i++) {
-					this.addRectangle(options.rectangles[i]);
-				}
 			}
 
 			/**
