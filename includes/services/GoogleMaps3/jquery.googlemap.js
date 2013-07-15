@@ -89,7 +89,7 @@
 
 
 		var setZoom = function( bounds ) {
-			if ( options.zoom === false ) {
+			if ( options.zoom === false || options.zoom == 14 ) { // check if 14 which is default and override it
 				_this.map.fitBounds( bounds );
 			}
 			else {
