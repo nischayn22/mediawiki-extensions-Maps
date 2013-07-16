@@ -158,6 +158,23 @@
 						markerOptions.visitedicon = undefined;
 					}
 				});
+				// TODO Customize this
+				//Add hover listener (using mouseover and mouseout), would only open infobox and never follow links
+				google.maps.event.addListener(marker, 'mouseover', function (e) {
+					openBubble.call(this, markerData, e, marker);
+					if (markerOptions.visitedicon) {
+						marker.setIcon(markerOptions.visitedicon);
+						markerOptions.visitedicon = undefined;
+					}
+				});
+
+				google.maps.event.addListener(marker, 'mouseout', function (e) {
+					openBubble.call(this, markerData, e, marker);
+					if (markerOptions.visitedicon) {
+						marker.setIcon(markerOptions.visitedicon);
+						markerOptions.visitedicon = undefined;
+					}
+				});
 
 				marker.setMap( _this.map );
 				_this.markers.push( marker );
@@ -272,6 +289,12 @@
 			google.maps.event.addListener(line, "click", function (event) {
 				openBubbleOrLink.call(this, properties, event, line);
 			});
+			google.maps.event.addListener(line, "mouseover", function (event) {
+				openBubble.call(this, properties, event, line);
+			});
+			google.maps.event.addListener(line, "mouseout", function (event) {
+				openBubble.call(this, properties, event, line);
+			});
 		};
 
 		this.removeLine = function (line) {
@@ -340,6 +363,12 @@
 			google.maps.event.addListener(polygon, "click", function (event) {
 				openBubbleOrLink.call(this, properties, event, polygon);
 			});
+			google.maps.event.addListener(polygon, "mouseover", function (event) {
+				openBubble.call(this, properties, event, polygon);
+			});
+			google.maps.event.addListener(polygon, "mouseout", function (event) {
+				openBubble.call(this, properties, event, polygon);
+			});
 		};
 
 		this.addCircle = function (properties) {
@@ -358,6 +387,12 @@
 			//add click event
 			google.maps.event.addListener(circle, "click", function (event) {
 				openBubbleOrLink.call(this, properties, event, circle);
+			});
+			google.maps.event.addListener(circle, "mouseover", function (event) {
+				openBubble.call(this, properties, event, circle);
+			});
+			google.maps.event.addListener(circle, "mouseout", function (event) {
+				openBubble.call(this, properties, event, circle);
 			});
 		};
 
@@ -381,6 +416,12 @@
 			google.maps.event.addListener(rectangle, "click", function (event) {
 				openBubbleOrLink.call(this, properties, event, rectangle);
 			});
+			google.maps.event.addListener(rectangle, "mouseover", function (event) {
+				openBubble.call(this, properties, event, rectangle);
+			});
+			google.maps.event.addListener(rectangle, "mouseout", function (event) {
+				openBubble.call(this, properties, event, rectangle);
+			});
 		};
 
         this.addImageOverlay = function(properties){
@@ -398,6 +439,12 @@
             google.maps.event.addListener(image, "click", function (event) {
                 openBubbleOrLink.call(this, properties, event, image);
             });
+			google.maps.event.addListener(image, "mouseover", function (event) {
+				openBubble.call(this, properties, event, image);
+			});
+			google.maps.event.addListener(image, "mouseout", function (event) {
+				openBubble.call(this, properties, event, image);
+			});
         };
 
 
@@ -766,7 +813,12 @@
 
 		function openBubble( properties, event, obj ) {
 			if ( this.openWindow !== undefined ) {
-				this.openWindow.close();
+				var _this = this;
+				setTimeout( function(){
+					_this.openWindow.close();
+					_this.openWindow = undefined;
+				}, 300 );
+				return;
 			}
 
 			this.openWindow = new google.maps.InfoWindow();
