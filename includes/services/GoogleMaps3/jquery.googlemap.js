@@ -441,6 +441,7 @@
 			mapOptions.mapTypeControl = $.inArray('type', options.controls) != -1;
 			mapOptions.scaleControl = $.inArray('scale', options.controls) != -1;
 			mapOptions.streetViewControl = $.inArray('streetview', options.controls) != -1;
+			mapOptions.scrollwheel = false;
 
 			for (i in options.types) {
 				if (typeof( options.types[i] ) !== 'function') {
@@ -539,7 +540,8 @@
 
 			var layerMapping = {
 				'traffic':'new google.maps.TrafficLayer()',
-				'bicycling':'new google.maps.BicyclingLayer()'
+				'bicycling':'new google.maps.BicyclingLayer()',
+				'transit':'new google.maps.TransitLayer()'
 			};
 
 			for (i = options.layers.length - 1; i >= 0; i--) {
