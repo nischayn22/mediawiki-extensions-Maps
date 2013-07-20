@@ -12,36 +12,31 @@ abstract class MapsCommonParameterManipulation extends ItemParameterManipulation
 
 	/**
 	 * This method requires that parameters are positionally correct,
-	 * 1. Link (one parameter) or bubble data (two parameters)
-	 * 2. Stroke data (three parameters)
-	 * 3. Fill data (two parameters)
-	 * e.g ...title~text~strokeColor~strokeOpacity~strokeWeight~fillColor~fillOpacity
+	 * 1. Title
+	 * 2. Text
+	 * 3. Link
+	 * 4. Stroke data (three parameters)
+	 * 5. Fill data (two parameters)
+	 * e.g ...title~text~link~strokeColor~strokeOpacity~strokeWeight~fillColor~fillOpacity
 	 * @static
 	 * @param $obj
 	 * @param $metadataParams
 	 */
 	protected function handleCommonParams( array &$params , &$model ) {
-
 		//Handle bubble and link parameters
 		if ( $model instanceof iBubbleMapElement && $model instanceof iLinkableMapElement ) {
-			//create link data
-			$linkOrTitle = array_shift( $params );
-			if ( $link = $this->isLinkParameter( $linkOrTitle ) ) {
-				$this->setLinkFromParameter( $model , $link );
-			} else {
-				//create bubble data
-				$this->setBubbleDataFromParameter( $model , $params , $linkOrTitle );
-			}
+			$this->setBubbleDataFromParameter( $model , $params );
+			$link = trim( array_shift( $params ) );
+			$this->setLinkFromParameter( $model , $link );
 		} else if ( $model instanceof iLinkableMapElement ) {
 			//only supports links
+			array_splice( $params, 0, 2 );
 			$link = array_shift( $params );
-			if ( $link = $this->isLinkParameter( $link ) ) {
-				$this->setLinkFromParameter( $model , $link );
-			}
+			$this->setLinkFromParameter( $model , $link );
 		} else if ( $model instanceof iBubbleMapElement ) {
 			//only supports bubbles
-			$title = array_shift( $params );
-			$this->setBubbleDataFromParameter( $model , $params , $title );
+			$this->setBubbleDataFromParameter( $model , $params );
+			array_splice( $params, 2, 1 );
 		}
 
 		//handle stroke parameters
@@ -78,8 +73,8 @@ abstract class MapsCommonParameterManipulation extends ItemParameterManipulation
 		}
 	}
 
-	private function setBubbleDataFromParameter( &$model , &$params , $title ) {
-		if ( $title ) {
+	private function setBubbleDataFromParameter( &$model , &$params ) {
+		if ( $title = array_shift( $params ) ) {
 			$model->setTitle( $title );
 		}
 		if ( $text = array_shift( $params ) ) {
@@ -88,26 +83,13 @@ abstract class MapsCommonParameterManipulation extends ItemParameterManipulation
 	}
 
 	private function setLinkFromParameter( &$model , $link ) {
-		if ( filter_var( $link , FILTER_VALIDATE_URL , FILTER_FLAG_SCHEME_REQUIRED ) ) {
-			$model->setLink( $link );
-		} else {
-			$title = Title::newFromText( $link );
-			$model->setLink( $title->getFullURL() );
+		if( $link ) {
+			if ( filter_var( $link , FILTER_VALIDATE_URL , FILTER_FLAG_SCHEME_REQUIRED ) ) {
+				$model->setLink( $link );
+			} else {
+				$title = Title::newFromText( $link );
+				$model->setLink( $title->getFullURL() );
+			}
 		}
-	}
-
-	/**
-	 * Checks if a string is prefixed with link:
-	 * @static
-	 * @param $link
-	 * @return bool|string
-	 * @since 2.0
-	 */
-	private function isLinkParameter( $link ) {
-		if ( strpos( $link , 'link:' ) === 0 ) {
-			return substr( $link , 5 );
-		}
-
-		return false;
 	}
 }
