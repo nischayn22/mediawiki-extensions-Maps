@@ -58,6 +58,18 @@ $wgResourceModules['ext.maps.gm3.markerwithlabel'] = array(
 	),
 );
 
+$wgResourceModules['ext.maps.gm3.maplabel'] = array(
+	'localBasePath' => __DIR__ . '/gm3-util-library',
+	'remoteBasePath' => $egMapsScriptPath .  '/includes/services/GoogleMaps3/gm3-util-library',
+	'group' => 'ext.maps',
+	'scripts' => array(
+		'maplabel.js',
+	),
+	'styles' => array(
+		// 'markerwithlabel.css',
+	),
+);
+
 $wgResourceModules['ext.maps.gm3.geoxml'] = array(
 	'localBasePath' => __DIR__ . '/geoxml3',
 	'remoteBasePath' => $egMapsScriptPath .  '/includes/services/GoogleMaps3/geoxml3',

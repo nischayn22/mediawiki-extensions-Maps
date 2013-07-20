@@ -286,6 +286,23 @@
 			});
 			this.lines.push(line);
 
+			var _this = this,
+				bounds = new google.maps.LatLngBounds();
+			line.getPath().forEach( function( point, i ){
+				bounds.extend( point );
+			} );
+			mw.loader.using(
+				'ext.maps.gm3.maplabel',
+				function() {
+					var mapLabel = new MapLabel({
+					  text: properties.title,
+					  map: _this.map,
+					  fontSize: 10,
+					  align: 'left'
+					});
+					mapLabel.set('position', new google.maps.LatLng( bounds.getSouthWest().lat() , bounds.getNorthEast().lng() ));
+				}
+			);
 			google.maps.event.addListener(line, "click", function (event) {
 				openBubbleOrLink.call(this, properties, event, line);
 			});
@@ -333,6 +350,27 @@
 				fillOpacity:properties.fillOpacity
 			});
 			this.polygons.push(polygon);
+
+			var _this = this,
+				bounds = new google.maps.LatLngBounds();
+
+			polygon.getPaths().forEach( function( path, i ){
+				path.forEach( function( point, i ){
+					bounds.extend( point );
+				});
+			});
+			mw.loader.using(
+				'ext.maps.gm3.maplabel',
+				function() {
+					var mapLabel = new MapLabel({
+					  text: properties.title,
+					  map: _this.map,
+					  fontSize: 10,
+					  align: 'left'
+					});
+					mapLabel.set('position', new google.maps.LatLng( bounds.getSouthWest().lat() , bounds.getNorthEast().lng() ));
+				}
+			);
 
 			//add hover event/effect
 			if (properties.onlyVisibleOnHover === true) {
@@ -384,6 +422,20 @@
 			});
 			this.circles.push(circle);
 
+			_this = this;
+			mw.loader.using(
+				'ext.maps.gm3.maplabel',
+				function() {
+					var mapLabel = new MapLabel({
+					  text: properties.title,
+					  map: _this.map,
+					  fontSize: 10,
+					  align: 'right'
+					});
+					mapLabel.set('position', new google.maps.LatLng( circle.getBounds().getSouthWest().lat() , circle.getBounds().getNorthEast().lng() ));
+				}
+			);
+
 			//add click event
 			google.maps.event.addListener(circle, "click", function (event) {
 				openBubbleOrLink.call(this, properties, event, circle);
@@ -411,6 +463,20 @@
 				strokeWeight:properties.strokeWeight
 			})
 			this.rectangles.push(rectangle);
+
+			_this = this;
+			mw.loader.using(
+				'ext.maps.gm3.maplabel',
+				function() {
+					var mapLabel = new MapLabel({
+					  text: properties.title,
+					  map: _this.map,
+					  fontSize: 10,
+					  align: 'left'
+					});
+					mapLabel.set('position', new google.maps.LatLng( rectangle.getBounds().getSouthWest().lat() , rectangle.getBounds().getNorthEast().lng() ));
+				}
+			);
 
 			//add click event
 			google.maps.event.addListener(rectangle, "click", function (event) {
