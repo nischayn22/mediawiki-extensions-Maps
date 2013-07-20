@@ -243,6 +243,7 @@ var mapEditor = {
         var positionalNames = [
             'title',
             'text',
+			'link',
             'strokeColor',
             'strokeOpacity',
             'strokeWeight',
@@ -250,13 +251,6 @@ var mapEditor = {
             'fillOpacity',
             'showOnHover'
         ];
-
-        if(positionalArray !== undefined && positionalArray.length > 0){
-            if(positionalArray[0].trim().indexOf('link:') === 0){
-                positionalNames.splice(0,1);
-                positionalNames[0] = 'link';
-            }
-        }
 
         for(var x = 0; x < positionalArray.length; x++){
             positionalArray[x] = {
@@ -300,9 +294,7 @@ var mapEditor = {
                     var data = mapObjectMeta[key];
                     delimiterPosition += delimiterPosition.length > 0 ? ' ~' : '~';
                     if(data.value !== ''){
-                        if(data.name === 'link' && data.value.indexOf('link:') === -1){
-                            data.value = 'link:'+data.value;
-                        }
+						data.value = data.value;
                         if(!(mapObjectType === 'imageoverlay' && data.name === 'image')){
                             metadata += delimiterPosition+data.value;
                             delimiterPosition = '';
@@ -596,30 +588,6 @@ $(document).ready(function(){
         this.dialog({
             modal:true,
             buttons:i18nButtons,
-            open:function(){
-                if(e.metadata !== undefined){
-                    var isText = true;
-                    for(var key in e.metadata){
-                        var data = e.metadata[key];
-                        if(data.name === 'link' && data.value.length > 0){
-                            isText = false;
-                            break;
-                        }
-                    }
-                    //depending on existing metadata,
-                    //show either form with title/text fields or just link field
-                    if(isText){
-                        $(this).find('input[value="text"]').trigger('click');
-                    }else{
-                        $(this).find('input[value="link"]').trigger('click');
-                    }
-                }else{
-                    //default trigger click on text radio button
-                    $(this).find('input[value="text"]').trigger('click');
-                }
-
-
-            },
             beforeClose:function(){
                 //reset the form
                 var form = $(this).find('form');
@@ -656,29 +624,6 @@ $(document).ready(function(){
         form.dialog({
             modal:true,
             buttons:i18nButtons,
-            open:function(){
-                //restore data from previous edits
-                if(e.metadata !== undefined){
-                    var isText = true;
-                    for(var key in e.metadata){
-                        var data = e.metadata[key];
-                        if(data.name === 'link' && data.value.length > 0){
-                            isText = false;
-                        }
-                        form.find('form input[name="'+data.name+'"]').val(data.value);
-                    }
-                    //depending on existing metadata,
-                    //show either form with title/text fields or just link field
-                    if(isText){
-                        form.find('input[value="text"]').trigger('click');
-                    }else{
-                        form.find('input[value="link"]').trigger('click');
-                    }
-                }else{
-                    //default trigger click on text radio button
-                    form.find('input[value="text"]').trigger('click');
-                }
-            },
             beforeClose:function(){
                 mapEditor.__drawingManager.setMap(mapEditor.__map); //re-enable standard drawing manager
                 if(e.imageoverlay === undefined){
@@ -871,20 +816,6 @@ $(document).ready(function(){
         var option = $('<option value="'+parameter+'">'+parameter+'</option>');
         formselect.append(option);
     }
-
-    //hide link input initially
-    $('input[name="link"]').attr('disabled',true).hide().prev().hide();
-
-    //init text/link switcher
-    $('input[name="switch"]').on('click',function(){
-        if($(this).val() === 'link'){
-            $(this).parent().next().find('input[name="title"],input[name="text"]').attr('disabled',true).hide().prev().hide();
-            $(this).parent().next().find('input[name="link"]').attr('disabled',false).show().prev().show();
-        }else{
-            $(this).parent().next().find('input[name="title"],input[name="text"]').attr('disabled',false).show().prev().show();
-            $(this).parent().next().find('input[name="link"]').attr('disabled',true).hide().prev().hide();
-        }
-    });
 
     //init enter keypress to press done on dialog.
     $('.mapeditor-dialog').on('keypress',function(e){

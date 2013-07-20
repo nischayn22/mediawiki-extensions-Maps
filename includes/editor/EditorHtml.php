@@ -44,10 +44,6 @@ class MapEditor extends ContextSource{
 		<textarea id="code-input" rows="15"></textarea>
 	</div>
 	<div id="marker-form" class="mapeditor-dialog" title="%4\$s">
-		<div class="link-title-switcher">
-			<input type="radio" name="switch" value="text" /> %5\$s
-			<input type="radio" name="switch" value="link" /> %6\$s
-		</div>
 		<form class="mapeditor-dialog-form">
 			<fieldset>
 				<label for="m-title">%7\$s</label>
@@ -69,10 +65,6 @@ class MapEditor extends ContextSource{
 	</div>
 
 	<div id="strokable-form" class="mapeditor-dialog" title="%4\$s">
-		<div class="link-title-switcher">
-			<input type="radio" name="switch" value="text" /> %5\$s
-			<input type="radio" name="switch" value="link" /> %6\$s
-		</div>
 		<form class="mapeditor-dialog-form">
 			<fieldset>
 				<label for="s-title">%7\$s</label>
@@ -92,10 +84,6 @@ class MapEditor extends ContextSource{
 	</div>
 
 	<div id="fillable-form" class="mapeditor-dialog" title="%4\$s">
-		<div class="link-title-switcher">
-			<input type="radio" name="switch" value="text" /> %5\$s
-			<input type="radio" name="switch" value="link" /> %6\$s
-		</div>
 		<form class="mapeditor-dialog-form">
 			<fieldset>
 				<label for="f-title">%7\$s</label>
@@ -119,10 +107,6 @@ class MapEditor extends ContextSource{
 	</div>
 
 	<div id="polygon-form" class="mapeditor-dialog" title="%4\$s">
-		<div class="link-title-switcher">
-			<input type="radio" name="switch" value="text" /> %5\$s
-			<input type="radio" name="switch" value="link" /> %6\$s
-		</div>
 		<form class="mapeditor-dialog-form">
 			<fieldset>
 				<label for="p-title">%7\$s</label>
@@ -156,10 +140,6 @@ class MapEditor extends ContextSource{
 		</form>
 	</div>
 	<div id="imageoverlay-form" title="%22\$s">
-		<div class="link-title-switcher">
-			<input type="radio" name="switch" value="text" /> %5\$s
-			<input type="radio" name="switch" value="link" /> %6\$s
-		</div>
 		<form class="mapeditor-dialog-form">
 			<fieldset>
 				<label for="i-title">%7\$s</label>
