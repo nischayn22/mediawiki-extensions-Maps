@@ -654,7 +654,9 @@
 			var layerMapping = {
 				'traffic':'new google.maps.TrafficLayer()',
 				'bicycling':'new google.maps.BicyclingLayer()',
-				'transit':'new google.maps.TransitLayer()'
+				'transit':'new google.maps.TransitLayer()',
+				'weather':'new google.maps.weather.WeatherLayer({ temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT })',
+				'panoramio':'new google.maps.panoramio.PanoramioLayer()'
 			};
 
 			for (i = options.layers.length - 1; i >= 0; i--) {

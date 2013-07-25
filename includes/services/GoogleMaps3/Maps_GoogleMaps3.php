@@ -40,8 +40,10 @@ class MapsGoogleMaps3 extends MapsMappingService {
 	 */
 	protected static $mapLayers = array(
 		'traffic',
-		'bicycling'
-	);	
+		'bicycling',
+		'weather',
+		'panoramio'
+	);
 	
 	public static $typeControlStyles = array(
 		'default' => 'DEFAULT',
@@ -231,7 +233,7 @@ class MapsGoogleMaps3 extends MapsMappingService {
 	 */
 	protected function getDependencies() {
 		return array(
-			self::getApiScript( $GLOBALS['wgLang']->getCode() ),
+			self::getApiScript( $GLOBALS['wgLang']->getCode(), array( 'libraries' => 'weather,panoramio' ) ),
 		);
 	}
 
