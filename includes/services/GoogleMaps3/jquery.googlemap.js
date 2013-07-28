@@ -648,7 +648,7 @@
 			}
 
 			for (i = options.fusiontables.length - 1; i >= 0; i--) {
-				var ftLayer = new google.maps.FusionTablesLayer(options.fusiontables[i], { map:map });
+				var ftLayer = new google.maps.FusionTablesLayer(options.fusiontables[i], { map:map, heatmap: { enabled: fusiontablesheatmaps } });
 			}
 
 			var layerMapping = {

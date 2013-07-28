@@ -144,6 +144,12 @@ class MapsGoogleMaps3 extends MapsMappingService {
 		$params['fusiontables']->setDefault( array() );
 		$params['fusiontables']->setMessage( 'maps-googlemaps3-par-fusiontables' );
 
+		$params['fusiontablesheatmaps'] = new Parameter(
+			'fusiontablesheatmaps' ,
+			Parameter::TYPE_BOOLEAN
+		);
+		$params['fusiontablesheatmaps']->setDefault( false );
+
 		$params['resizable'] = new Parameter( 'resizable', Parameter::TYPE_BOOLEAN );
 		$params['resizable']->setDefault( $egMapsResizableByDefault, false );
 		$params['resizable']->setMessage( 'maps-par-resizable' );
