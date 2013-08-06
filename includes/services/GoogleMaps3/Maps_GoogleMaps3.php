@@ -185,6 +185,11 @@ class MapsGoogleMaps3 extends MapsMappingService {
 		$params['searchmarkers']->addCriteria( new CriterionSearchMarkers() );
 		$params['searchmarkers']->setDoManipulationOfDefault( false );
 
+		$params['infoonhover'] = new Parameter(
+			'infoonhover' ,
+			Parameter::TYPE_BOOLEAN
+		);
+		$params['infoonhover']->setDefault( false );
 	}
 	
 	/**
